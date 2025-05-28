@@ -72,7 +72,12 @@ def get_blueprints(expansion_id: int):
 
 def get_products(expansion_id: int = None, blueprint_id: int = None, foil: bool = None, language: str = None):
     url = f'{BASE_URL}/marketplace/products'
-    params = {}
+    params = {k: v for k, v in {
+        "expansion_id": expansion_id,
+        "blueprint_id": blueprint_id,
+        "foil": foil,
+        "language": language,
+    }.items() if v is not None}
 
     if expansion_id:
         params['expansion_id'] = expansion_id

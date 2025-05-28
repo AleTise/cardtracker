@@ -14,7 +14,7 @@ export default function CardSearch() {
         const res = await fetch('http://localhost:8000/cardtrader', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name }),
+            body: JSON.stringify({ name })
         });
 
         const data = await res.json();

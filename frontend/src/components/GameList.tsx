@@ -13,7 +13,7 @@ export default function GameList() {
     useEffect(() => {
         fetch('http://localhost:8000/games')
         .then(response => response.json())
-        .then(data => setGames(data))
+        .then(data => {console.log('Fetched games:', data); setGames(data);})
         .catch(error => console.error('API games fetch error:', error));
     }, []);
 

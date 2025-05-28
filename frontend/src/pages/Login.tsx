@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -40,14 +41,16 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 mb-3 border rounded"
-                placeholder="Password"
-            />
-            <button
-                onClick={handle_login}
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-            >
+                placeholder="Password"/>
+            <button onClick={handle_login} className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
                 Accedi
             </button>
+            <p className="text-center mt-4 text-sm">
+                Non hai un account?{" "}
+                <Link to="/register" className="text-blue-600 hover:underline">
+                    Registrati
+                </Link>
+            </p>
         </div>
     );
 }
