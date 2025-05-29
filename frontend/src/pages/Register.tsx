@@ -1,23 +1,44 @@
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const {login} = useAuth();
     const navigate = useNavigate();
 
     const handle_register = async () => {
-        const res = await fetch('http://localhost:8000/register', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username, password})
-        });
+        setLoading(true);
 
-        if (res.ok) {
-            alert('Registration successful! Now log in.');
+        try {
+            const res = await fetch('http://localhost:8000/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+
+            if (!res.ok) throw new Error('Registration failed! Retry.');
+
+            const loginRes = await fetch('http://localhost:8000/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    username,
+                    password,
+                }),
+            });
+
+            if (!loginRes.ok) throw new Error('Registration ok, but login failed');
+            
+            const data = await loginRes.json();
+            login(data.access_token);
             navigate('/login');
-        } else {
-            alert('Registration failed! Retry.');
+        } catch (err) {
+            alert('Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -36,8 +57,11 @@ export default function Register() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 mb-3 border rounded"
                 placeholder="Password"/>
-            <button onClick={handle_register} className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
-                Registrati
+            <button
+                onClick={handle_register}
+                disabled={loading}
+                className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 disabled:opacity-50">
+                {loading ? "Registrazione in corso..." : "Registrati"}
             </button>
         </div>
     );

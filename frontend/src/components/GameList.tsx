@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { get } from "@/lib/api";
 
 interface Game {
     id: number;
@@ -11,10 +12,7 @@ export default function GameList() {
     const [selectedGame, setSelectedGame] = useState<number | null>(null);
 
     useEffect(() => {
-        fetch('http://localhost:8000/games')
-        .then(response => response.json())
-        .then(data => {console.log('Fetched games:', data); setGames(data);})
-        .catch(error => console.error('API games fetch error:', error));
+        get('/games').then(setGames).catch(console.error);
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
